@@ -17,15 +17,17 @@ type App struct {
 	Router *mux.Router
 }
 
+// # get db instance
 var db = utils.GetDB()
 
 // Initialize Server Stuff
 func (a *App) Initialize() {
 	// # setup router
 	a.Router = mux.NewRouter()
-	a.SetupRouters()
+	a.SetupAPIRouter("/api/v1")
 	// # apply any middleware
 	a.ApplyMiddleware(middlewares.LoggerMiddleware)
+	// a.ApplyMiddleware(middlewares.AuthMiddleware)
 	// # add cors method for api
 	// a.ApplyMiddleware(mux.CORSMethodMiddleware(a.Router))
 }
@@ -35,13 +37,22 @@ func (a *App) ApplyMiddleware(middleware func(next http.Handler) http.Handler) {
 	a.Router.Use(middleware)
 }
 
-// SetupRouters METHOD
-func (a *App) SetupRouters() {
-	a.Get("/api/book/test", a.getTestRoute)
-	a.Post("/api/book/save", a.saveBookRoute)
-	a.Get("/api/book/{id}", a.getBookRoute)
-	a.Delete("/api/book/{id}", a.deleteBookRoute)
-	a.Get("/api/books", a.getAllBookRoute)
+// SetupAPIRouter METHOD
+func (a *App) SetupAPIRouter(path string) {
+	// # creates a subrouter path
+	s := a.Router.PathPrefix(path).Subrouter()
+	a.Router = s
+	// # setup router for API version 1
+	a.SetupAPIV1Router()
+}
+
+// SetupAPIV1Router METHOD (ONLY FOR VERSION 1)
+func (a *App) SetupAPIV1Router() {
+	a.Get("/book/test", a.getTestRoute)
+	a.Post("/book/save", a.saveBookRoute)
+	a.Get("/book/{id}", a.getBookRoute)
+	a.Delete("/book/{id}", a.deleteBookRoute)
+	a.Get("/books", a.getAllBookRoute)
 }
 
 // Get METHOD
