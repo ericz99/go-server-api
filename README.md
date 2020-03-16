@@ -32,7 +32,8 @@ go build
 ./go-server-api-example - [if you\'re using linux/macos]
 go-server-api-example - [if you\'re using windows]
 
-# API Endpoint : http://localhost:8080
+# API Endpoint (VERSION 1) : http://localhost:8080/api/v1
+# API Endpoint (VERSION 2) : http://localhost:8080/api/v2
 ```
 
 ## Todo
@@ -40,7 +41,7 @@ go-server-api-example - [if you\'re using windows]
 - [x] Support basic REST APIs.
 - [x] Support GORM/Database
 - [ ] Support Authentication with user for securing the APIs.
-- [ ] Make convenient wrappers for creating API handlers.
+- [x] Make convenient wrappers for creating API handlers.
 - [ ] Write the tests for all APIs.
 - [x] Organize the code with packages
 - [ ] Make docs with GoDoc
