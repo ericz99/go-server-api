@@ -1,22 +1,26 @@
 package migrate
 
-import "github.com/jinzhu/gorm"
+import (
+	"fmt"
+	"os"
+
+	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
+)
 
 // Book Struct (Model)
 type Book struct {
-	gorm.Model
-	BookID int    `gorm:"column:book_id" json:"bookid"`
-	ISBN   string `gorm:"column:isbn" json:"isbn"`
-	Title  string `gorm:"column:title" json:"title"`
-	// Author    Author `gorm:"foreignkey:BookRefer"` // use BookRefer as foreign key
-	// BookRefer uint
+	BookID uint   `gorm:"primary_key" json:"bookId"`
+	ISBN   string `json:"isbn"`
+	Title  string `json:"title"`
+	Author Author `json:"author" gorm:"foreignkey:AuthorID"`
 }
 
 // Author Struct (Model)
 type Author struct {
-	gorm.Model
-	Name  string `gorm:"type:varchar(50)" json:"name"`
-	Books []Book `gorm:"foreignkey:BookRefer"`
+	AuthorID uint   `gorm:"primary_key" json:"authorId"`
+	Name     string `json:"name"`
+	// Books    []Book `json:"books"`
 }
 
 // Response Status Struct (Model)
@@ -34,7 +38,31 @@ type Test struct {
 
 // DBMigrate will migrate all models
 func DBMigrate(db *gorm.DB) *gorm.DB {
-	// Automatically create migration as per model
+
+	e := godotenv.Load()
+
+	if e != nil {
+		fmt.Println(e)
+		return nil
+	}
+
+	mode := os.Getenv("mode")
+
+	// # only drop table if doesn't exist
+	if mode == "development" {
+		// # Create the database. This is a one-time step.
+		// # Comment out if running multiple times - You may see an error otherwise
+		db.Exec("DROP DATABASE testdb")
+		db.Exec("CREATE DATABASE testdb")
+		db.Exec("USE testdb")
+	} else {
+		// # ONLY CREATE DATABASE IF NOT EXIST IN PRODUCTION
+		db.Exec("CREATE DATABASE IF NOT EXISTS testdb")
+	}
+
+	// # Automatically create migration as per model
 	db.Debug().AutoMigrate(&Book{}, &Author{}, &Response{}, &Test{})
+
+	// # return instance
 	return db
 }
