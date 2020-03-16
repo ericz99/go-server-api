@@ -34,17 +34,9 @@ func GetBookTestRoute(w http.ResponseWriter, r *http.Request) {
 // SaveBookRoute Controller Route
 func SaveBookRoute(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	var bookService service.BookService
-	// # set header as content type json format
-	w.Header().Set("Content-Type", "application/json")
-
 	var book models.Book
 	err := json.NewDecoder(r.Body).Decode(&book)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 
-	defer r.Body.Close()
 	// # save book
 	err = bookService.SaveBook(db, &book)
 	if err != nil {
@@ -52,7 +44,16 @@ func SaveBookRoute(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(&models.Response{Status: "OK", Message: "Successfully added book to db!"})
+	// # set header as content type json format
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defer r.Body.Close()
+
+	json.NewEncoder(w).Encode(book)
 }
 
 // GetAllBookRoute Route

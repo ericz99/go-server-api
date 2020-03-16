@@ -1,25 +1,16 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 // Book Struct (Model)
 type Book struct {
-	gorm.Model
-	BookID int    `gorm:"column:book_id" json:"bookid"`
-	ISBN   string `gorm:"column:isbn" json:"isbn"`
-	Title  string `gorm:"column:title" json:"title"`
-	// Author    Author `gorm:"foreignkey:BookRefer"` // use BookRefer as foreign key
-	// BookRefer uint
+	BookID uint   `gorm:"primary_key" json:"bookId"`
+	ISBN   string `json:"isbn"`
+	Title  string `json:"title"`
+	Author Author `json:"author" gorm:"foreignkey:AuthorID"`
 }
 
 // TableName return name of database table
 func (b *Book) TableName() string {
 	return "books"
-}
-
-// # GET ID Method
-func (b Book) getID() int {
-	return b.BookID
 }
 
 // # GET ISBN Method

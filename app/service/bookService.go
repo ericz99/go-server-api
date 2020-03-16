@@ -12,8 +12,8 @@ type BookService struct {
 }
 
 // FindAll METHOD
-func (b *BookService) FindAll(db *gorm.DB, book *[]models.Book) (err error) {
-	if err = db.Order("id desc").Find(book).Error; err != nil {
+func (b *BookService) FindAll(db *gorm.DB, books *[]models.Book) (err error) {
+	if err = db.Preload("Author").Find(&books).Error; err != nil {
 		return err
 	}
 
@@ -31,7 +31,7 @@ func (b *BookService) SaveBook(db *gorm.DB, book *models.Book) (err error) {
 
 // GetBookByID | GET BOOK BY ID
 func (b *BookService) GetBookByID(db *gorm.DB, id int, book *models.Book) (err error) {
-	if err = db.Where("book_id = ?", id).First(&book).Error; err != nil {
+	if err = db.Preload("Author").Where("book_id = ?", id).First(&book).Error; err != nil {
 		return err
 	}
 
