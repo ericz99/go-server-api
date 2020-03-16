@@ -1,7 +1,8 @@
 package routers
 
 import (
-	"go-server-api/app/controllers"
+	V1Controller "go-server-api/app/controllers/api/v1"
+	V2Controller "go-server-api/app/controllers/api/v2"
 	"go-server-api/app/middlewares"
 	"go-server-api/app/utils"
 	"log"
@@ -24,7 +25,9 @@ var db = utils.GetDB()
 func (a *App) Initialize() {
 	// # setup router
 	a.Router = mux.NewRouter()
+
 	a.SetupAPIRouter("/api/v1")
+	a.SetupAPIRouter("/api/v2")
 	// # apply any middleware
 	a.ApplyMiddleware(middlewares.LoggerMiddleware)
 	// a.ApplyMiddleware(middlewares.AuthMiddleware)
@@ -41,58 +44,93 @@ func (a *App) ApplyMiddleware(middleware func(next http.Handler) http.Handler) {
 func (a *App) SetupAPIRouter(path string) {
 	// # creates a subrouter path
 	s := a.Router.PathPrefix(path).Subrouter()
-	a.Router = s
-	// # setup router for API version 1
-	a.SetupAPIV1Router()
+
+	// # here we setup our api router path version
+	if path == "/api/v1" {
+		// # setup router for API version 1
+		a.SetupAPIV1Router(s)
+	} else {
+		// # setup router for API version 1
+		a.SetupAPIV2Router(s)
+	}
 }
 
-// SetupAPIV1Router METHOD (ONLY FOR VERSION 1)
-func (a *App) SetupAPIV1Router() {
-	a.Get("/book/test", a.getTestRoute)
-	a.Post("/book/save", a.saveBookRoute)
-	a.Get("/book/{id}", a.getBookRoute)
-	a.Delete("/book/{id}", a.deleteBookRoute)
-	a.Get("/books", a.getAllBookRoute)
+// SetupAPIV1Router METHOD (VERSION API 1)
+func (a *App) SetupAPIV1Router(s *mux.Router) {
+	a.Get(s, "/status", a.statusBookRouteV1)
+	a.Post(s, "/book/save", a.saveBookRouteV1)
+	a.Get(s, "/book/{id}", a.getBookRouteV1)
+	a.Delete(s, "/book/{id}", a.deleteBookRouteV1)
+	a.Get(s, "/books", a.getAllBookRouteV1)
+}
+
+// SetupAPIV2Router METHOD (VERSION API 2)
+func (a *App) SetupAPIV2Router(s *mux.Router) {
+	a.Get(s, "/status", a.statusBookRouteV2)
+	a.Post(s, "/book/save", a.saveBookRouteV2)
+	a.Get(s, "/book/{id}", a.getBookRouteV2)
+	a.Delete(s, "/book/{id}", a.deleteBookRouteV2)
+	a.Get(s, "/books", a.getAllBookRouteV2)
 }
 
 // Get METHOD
-func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
-	a.Router.HandleFunc(path, f).Methods("GET")
+func (a *App) Get(s *mux.Router, path string, f func(w http.ResponseWriter, r *http.Request)) {
+	s.HandleFunc(path, f).Methods("GET")
 }
 
 // Post METHOD
-func (a *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
-	a.Router.HandleFunc(path, f).Methods("POST")
+func (a *App) Post(s *mux.Router, path string, f func(w http.ResponseWriter, r *http.Request)) {
+	s.HandleFunc(path, f).Methods("POST")
 }
 
 // Delete METHOD
-func (a *App) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
-	a.Router.HandleFunc(path, f).Methods("DELETE")
+func (a *App) Delete(s *mux.Router, path string, f func(w http.ResponseWriter, r *http.Request)) {
+	s.HandleFunc(path, f).Methods("DELETE")
 }
 
 // Put METHOD
-func (a *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
-	a.Router.HandleFunc(path, f).Methods("PUT")
+func (a *App) Put(s *mux.Router, path string, f func(w http.ResponseWriter, r *http.Request)) {
+	s.HandleFunc(path, f).Methods("PUT")
 }
 
-func (a *App) getTestRoute(w http.ResponseWriter, r *http.Request) {
-	controllers.GetBookTestRoute(w, r)
+func (a *App) statusBookRouteV1(w http.ResponseWriter, r *http.Request) {
+	V1Controller.GetBookStatusRoute(w, r)
 }
 
-func (a *App) saveBookRoute(w http.ResponseWriter, r *http.Request) {
-	controllers.SaveBookRoute(db, w, r)
+func (a *App) saveBookRouteV1(w http.ResponseWriter, r *http.Request) {
+	V1Controller.SaveBookRoute(db, w, r)
 }
 
-func (a *App) getBookRoute(w http.ResponseWriter, r *http.Request) {
-	controllers.GetBookRoute(db, w, r)
+func (a *App) getBookRouteV1(w http.ResponseWriter, r *http.Request) {
+	V1Controller.GetBookRoute(db, w, r)
 }
 
-func (a *App) deleteBookRoute(w http.ResponseWriter, r *http.Request) {
-	controllers.DeleteBookRoute(db, w, r)
+func (a *App) deleteBookRouteV1(w http.ResponseWriter, r *http.Request) {
+	V1Controller.DeleteBookRoute(db, w, r)
 }
 
-func (a *App) getAllBookRoute(w http.ResponseWriter, r *http.Request) {
-	controllers.GetAllBookRoute(db, w, r)
+func (a *App) getAllBookRouteV1(w http.ResponseWriter, r *http.Request) {
+	V1Controller.GetAllBookRoute(db, w, r)
+}
+
+func (a *App) statusBookRouteV2(w http.ResponseWriter, r *http.Request) {
+	V2Controller.GetBookStatusRoute(w, r)
+}
+
+func (a *App) saveBookRouteV2(w http.ResponseWriter, r *http.Request) {
+	V2Controller.SaveBookRoute(db, w, r)
+}
+
+func (a *App) getBookRouteV2(w http.ResponseWriter, r *http.Request) {
+	V2Controller.GetBookRoute(db, w, r)
+}
+
+func (a *App) deleteBookRouteV2(w http.ResponseWriter, r *http.Request) {
+	V2Controller.DeleteBookRoute(db, w, r)
+}
+
+func (a *App) getAllBookRouteV2(w http.ResponseWriter, r *http.Request) {
+	V2Controller.GetAllBookRoute(db, w, r)
 }
 
 // Run Server
