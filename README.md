@@ -36,6 +36,33 @@ go-server-api-example - [if you\'re using windows]
 # API Endpoint (VERSION 2) : http://localhost:8080/api/v2
 ```
 
+## API
+
+#### /book/save
+
+- `POST` : Save a book
+
+#### /books
+
+- `GET` : Get all book
+
+#### /book/:id
+
+- `GET` : Get a book
+- `DELETE` : Delete a book
+
+#Post Params
+
+```
+{
+	"title": "LOL: Book PT 2",
+	"isbn": "isbn-6s9",
+	"author": {
+		"name": "Bob"
+	}
+}
+```
+
 ## Todo
 
 - [x] Support basic REST APIs.
