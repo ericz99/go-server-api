@@ -14,7 +14,7 @@ type Book struct {
 
 // TableName return name of database table
 func (b *Book) TableName() string {
-	return "book"
+	return "books"
 }
 
 // # GET ID Method

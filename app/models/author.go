@@ -13,7 +13,7 @@ type Author struct {
 
 // TableName return name of database table
 func (a *Author) TableName() string {
-	return "author"
+	return "authors"
 }
 
 // # GET Name Method

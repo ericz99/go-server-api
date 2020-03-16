@@ -2,8 +2,8 @@ package utils
 
 import (
 	"fmt"
-	"go-server-api/app/models"
 	"go-server-api/config"
+	"go-server-api/migrate"
 	"log"
 
 	// MYSQL
@@ -41,7 +41,7 @@ func init() {
 	db.LogMode(true)
 	fmt.Println("Successfully Connected to MySQL Database")
 	// Automatically create migration as per model
-	db.Debug().AutoMigrate(&models.Book{}, &models.Author{}, &models.Response{}, &models.Test{})
+	db = migrate.DBMigrate(db)
 }
 
 // GetDB function return the instance of db

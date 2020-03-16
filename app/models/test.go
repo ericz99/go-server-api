@@ -12,5 +12,5 @@ type Test struct {
 
 // TableName return name of database table
 func (t *Test) TableName() string {
-	return "test"
+	return "tests"
 }

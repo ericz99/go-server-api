@@ -13,5 +13,5 @@ type Response struct {
 
 // TableName return name of database table
 func (r *Response) TableName() string {
-	return "response"
+	return "responses"
 }
