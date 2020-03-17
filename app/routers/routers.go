@@ -26,12 +26,12 @@ var db = utils.GetDB()
 func (a *App) Initialize() {
 	// # setup router
 	a.Router = mux.NewRouter()
-
 	a.SetupAuthAPIRouter()
 	a.SetupAPIRouter("/api/v1")
 	a.SetupAPIRouter("/api/v2")
 	// # apply any middleware
 	a.ApplyMiddleware(middlewares.LoggerMiddleware)
+	a.ApplyMiddleware(middlewares.CommonMiddleware)
 	// a.ApplyMiddleware(middlewares.AuthMiddleware)
 	// # add cors method for api
 	// a.ApplyMiddleware(mux.CORSMethodMiddleware(a.Router))

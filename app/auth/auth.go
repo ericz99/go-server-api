@@ -73,11 +73,6 @@ func Login(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-// GetCurrentUser Method - Get current user status
-// func GetCurrentUser(w http.ResponseWriter, r *http.Request) {
-// 	user := &models.User{}
-// }
-
 // GenerateToken Method - Will generate a valid JWT token
 func GenerateToken(email, password string, db *gorm.DB) map[string]interface{} {
 	e := godotenv.Load()
