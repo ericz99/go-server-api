@@ -1,6 +1,7 @@
 package routers
 
 import (
+	AuthController "go-server-api/app/auth"
 	V1Controller "go-server-api/app/controllers/api/v1"
 	V2Controller "go-server-api/app/controllers/api/v2"
 	"go-server-api/app/middlewares"
@@ -26,6 +27,7 @@ func (a *App) Initialize() {
 	// # setup router
 	a.Router = mux.NewRouter()
 
+	a.SetupAuthAPIRouter()
 	a.SetupAPIRouter("/api/v1")
 	a.SetupAPIRouter("/api/v2")
 	// # apply any middleware
@@ -44,6 +46,7 @@ func (a *App) ApplyMiddleware(middleware func(next http.Handler) http.Handler) {
 func (a *App) SetupAPIRouter(path string) {
 	// # creates a subrouter path
 	s := a.Router.PathPrefix(path).Subrouter()
+	s.Use(middlewares.AuthMiddleware)
 
 	// # here we setup our api router path version
 	if path == "/api/v1" {
@@ -71,6 +74,12 @@ func (a *App) SetupAPIV2Router(s *mux.Router) {
 	a.Get(s, "/book/{id}", a.getBookRouteV2)
 	a.Delete(s, "/book/{id}", a.deleteBookRouteV2)
 	a.Get(s, "/books", a.getAllBookRouteV2)
+}
+
+//SetupAuthAPIRouter METHOD (SETUP AUTH HANDLER)
+func (a *App) SetupAuthAPIRouter() {
+	a.Post(a.Router, "/api/auth/login", a.loginRouteAPI)
+	a.Post(a.Router, "/api/auth/register", a.registerRouteAPI)
 }
 
 // Get METHOD
@@ -131,6 +140,14 @@ func (a *App) deleteBookRouteV2(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) getAllBookRouteV2(w http.ResponseWriter, r *http.Request) {
 	V2Controller.GetAllBookRoute(db, w, r)
+}
+
+func (a *App) loginRouteAPI(w http.ResponseWriter, r *http.Request) {
+	AuthController.Login(db, w, r)
+}
+
+func (a *App) registerRouteAPI(w http.ResponseWriter, r *http.Request) {
+	AuthController.Register(db, w, r)
 }
 
 // Run Server
