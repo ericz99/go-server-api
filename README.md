@@ -27,10 +27,12 @@ func GetConfig() *Config {
 
 ```bash
 # Build and Run
-cd go-server-api-example
+cd go-server-api
 go build
-./go-server-api-example - [if you\'re using linux/macos]
-go-server-api-example - [if you\'re using windows]
+./go-server-api - [if you\'re using linux/macos]
+go-server-api - [if you\'re using windows]
+
+# Please change .env.example -> .env and update the values
 
 # API Endpoint (VERSION 1) : http://localhost:8080/api/v1
 # API Endpoint (VERSION 2) : http://localhost:8080/api/v2
