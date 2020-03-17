@@ -11,18 +11,25 @@ go get github.com/ericz99/go-server-api
 
 Before running API server, you should set the database config with yours or set the your database config with my values on [config.go](https://github.com/ericz99/go-server-api/blob/master/config/config.go)
 
-```go
-func GetConfig() *Config {
-	return &Config{
-		DB: &DBConfig{
-			Dialect:  "mysql",
-			Username: "guest",
-			Password: "Guest0000!",
-			Name:     "todoapp",
-			Charset:  "utf8",
-		},
-	}
-}
+Also, please change .env.example -> .env and update the all fields.
+
+```bash
+# production env mode
+mode = development
+
+# database config
+db_name = testdb
+db_pass = passwrod
+db_user = root
+db_type = mysql
+db_host = localhost
+db_port = 3306
+
+# server port
+port = 8080
+
+# for jwt secret key
+secret_key = feTATm1?@d+1GKG
 ```
 
 ```bash
@@ -32,13 +39,11 @@ go build
 ./go-server-api - [if you\'re using linux/macos]
 go-server-api - [if you\'re using windows]
 
-# Please change .env.example -> .env and update the values
-
 # API Endpoint (VERSION 1) : http://localhost:8080/api/v1
 # API Endpoint (VERSION 2) : http://localhost:8080/api/v2
 ```
 
-## API
+## API - SAME AS V1 & V2
 
 #### /book/save
 
