@@ -46,7 +46,7 @@ go-server-api - [if you\'re using windows]
 
 ## API
 
-## Auth Endpoint
+## Auth Endpoint - Using auth endpoint
 
 #### /register
 
@@ -75,7 +75,7 @@ go-server-api - [if you\'re using windows]
 }
 ```
 
-## Protected Endpoint
+## Protected Endpoint - Using either V1 or V2 endpoint
 
 Please add `x-auth-token` in your header in order to get authorized to any of these endpoint below!
 
