@@ -69,7 +69,7 @@ go-server-api - [if you\'re using windows]
 
 - [x] Support basic REST APIs.
 - [x] Support GORM/Database
-- [ ] Support Authentication with user for securing the APIs.
+- [x] Support Authentication with user for securing the APIs.
 - [x] Make convenient wrappers for creating API handlers.
 - [ ] Write the tests for all APIs.
 - [x] Organize the code with packages
