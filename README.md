@@ -1,6 +1,6 @@
 # Go Server REST API Example
 
-A RESTful API example for simple todo application with Go
+A RESTful API example for simple book application in Golang
 
 ## Installation & Run
 
