@@ -41,9 +41,43 @@ go-server-api - [if you\'re using windows]
 
 # API Endpoint (VERSION 1) : http://localhost:8080/api/v1
 # API Endpoint (VERSION 2) : http://localhost:8080/api/v2
+# API Auth Endpoint : http://localhost:8080/api/auth
 ```
 
-## API - SAME AS V1 & V2
+## API
+
+### Auth Endpoint
+
+#### /register
+
+- `POST` : Create new user
+
+#Post Params
+
+```
+{
+	"name": "Hello World",
+	"email": "test@yahoo.com",
+	"password": "asdfasdf"
+}
+```
+
+#### /login
+
+- `POST` : Login User
+
+#Post Params
+
+```
+{
+	"email": "test@yahoo.com",
+	"password": "asdfasdf"
+}
+```
+
+### Protected Endpoint
+
+Please add `x-auth-token` in your header in order to get authorized to any of these endpoint below!
 
 #### /book/save
 
