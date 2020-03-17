@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 )
@@ -36,6 +37,22 @@ type Test struct {
 	Msg string `gorm:"type:varchar(50)" json:"msg" validate:"required"`
 }
 
+// Claim Struct (Model)
+type Claim struct {
+	UserID uint
+	Name   string
+	Email  string
+	*jwt.StandardClaims
+}
+
+// User Struct (Model)
+type User struct {
+	UserID   uint   `gorm:"primary_key" json:"userId"`
+	Name     string `json:"name"`
+	Email    string `json:"email" gorm:"type:varchar(100);unique_index"`
+	Password string `json:"password"`
+}
+
 // DBMigrate will migrate all models
 func DBMigrate(db *gorm.DB) *gorm.DB {
 
@@ -61,7 +78,7 @@ func DBMigrate(db *gorm.DB) *gorm.DB {
 	}
 
 	// # Automatically create migration as per model
-	db.Debug().AutoMigrate(&Book{}, &Author{}, &Response{}, &Test{})
+	db.Debug().AutoMigrate(&Book{}, &Author{}, &Response{}, &Test{}, &User{}, &Claim{})
 
 	// # return instance
 	return db
